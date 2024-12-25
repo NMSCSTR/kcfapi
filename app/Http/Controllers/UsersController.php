@@ -12,7 +12,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        return view('Auth.login');
     }
 
     /**
@@ -20,7 +20,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        return view('Auth.login');
     }
 
     /**
