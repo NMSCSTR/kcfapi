@@ -1,15 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/Auth/login', function () {
-    return view('Auth.login');
-})->name('login');
-
-Route::get('/Auth/signup', function () {
-    return view('Auth.signup');
-})->name('signup');
+Route::get('/Auth/login', [UsersController::class, 'index'])->name('login');
+Route::get('/Auth/signup', [UsersController::class, 'create'])->name('signup');
+Route::post('/register', [UsersController::class, 'store'])->name('register.store');

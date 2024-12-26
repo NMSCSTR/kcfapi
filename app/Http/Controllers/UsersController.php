@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Users;
+use App\Models\User; // Ensure you import the correct model
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Show the login form.
      */
     public function index()
     {
@@ -16,50 +17,39 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the registration form.
      */
     public function create()
     {
-        return view('Auth.login');
+        return view('Auth.signup');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'kcfapicode' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'phone_number' => 'required|string|max:15',
+            'role' => 'required|string|in:admin,unit-manager,fraternal-counselor,family-member',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Users $users)
-    {
-        //
-    }
+        // Create the user
+        User::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'kcfapicode' => $request->kcfapicode,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'role' => $request->role,
+            'password' => Hash::make($request->password), // Hashing the password
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Users $users)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Users $users)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Users $users)
-    {
-        //
+        return redirect()->route('login')->with('success', 'Account created successfully.');
     }
 }
